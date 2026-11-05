@@ -163,8 +163,8 @@
     <string name="reminder_template_default">Стандартный текст</string>
     <string name="reminder_template_help">{name} — имя клиента, {amount} — сумма долга, {shop} — ваш магазин</string>
     <string name="remove">Убрать</string>
-    <string name="report_gave">Выдано</string>
-    <string name="report_got">Получено</string>
+    <string name="report_gave">Выдано в долг</string>
+    <string name="report_got">Возвращено</string>
     <string name="report_now">На сегодня</string>
     <string name="report_overdue">Просрочено</string>
     <string name="report_pdf">PDF-отчёт</string>

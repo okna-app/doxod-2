@@ -163,8 +163,8 @@
     <string name="reminder_template_default">Стандарттык текст</string>
     <string name="reminder_template_help">{name} — кардардын аты, {amount} — карыз суммасы, {shop} — дүкөнүңүз</string>
     <string name="remove">Алып салуу</string>
-    <string name="report_gave">Берилди</string>
-    <string name="report_got">Алынды</string>
+    <string name="report_gave">Насыяга берилди</string>
+    <string name="report_got">Кайтарылды</string>
     <string name="report_now">Бүгүнкү абал</string>
     <string name="report_overdue">Мөөнөтү өткөндөр</string>
     <string name="report_pdf">PDF отчёт</string>

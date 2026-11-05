@@ -47,6 +47,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
@@ -72,6 +74,8 @@ fun OnboardingScreen(onDone: () -> Unit) {
     var country by rememberSaveable { mutableStateOf(store.value.country) }
     val lang = AppLanguage.effective(currentLocale().language)
     val c = Depter.colors
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
 
     Column(
         Modifier
@@ -157,7 +161,9 @@ fun OnboardingScreen(onDone: () -> Unit) {
             ) {
                 Button(
                     onClick = {
-                        val ctry = Countries.byIso(country)
+                        focusManager.clearFocus()
+                    keyboard?.hide()
+                    val ctry = Countries.byIso(country)
                         store.update {
                             it.copy(
                                 onboarded = true,

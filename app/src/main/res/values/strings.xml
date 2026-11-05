@@ -167,8 +167,8 @@
     <string name="reminder_template_help">{name} — customer name, {amount} — debt, {shop} — your shop</string>
     <string name="remove">Remove</string>
     <string name="report_excel" translatable="false">Excel</string>
-    <string name="report_gave">Given</string>
-    <string name="report_got">Received</string>
+    <string name="report_gave">Given on credit</string>
+    <string name="report_got">Paid back</string>
     <string name="report_now">Right now</string>
     <string name="report_overdue">Overdue</string>
     <string name="report_pdf">PDF report</string>

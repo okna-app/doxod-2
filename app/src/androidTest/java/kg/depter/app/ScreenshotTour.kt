@@ -191,6 +191,7 @@ class ScreenshotTour {
         waitTag("onb_start")
         shot("${lang}_01_onboarding")
         compose.onNodeWithTag("onb_shop").performScrollTo().performTextInput(d.shop)
+        Espresso.closeSoftKeyboard()
         compose.onNodeWithTag("onb_start").performClick()
         waitTag("home_list")
         shot("${lang}_02_home")

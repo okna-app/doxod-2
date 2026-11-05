@@ -158,6 +158,8 @@ class Repository(private val helper: DepterDb) {
         var got = 0L
         val byDay = LinkedHashMap<Long, LongArray>()
         for (r in entries) {
+            // Period totals describe customer credit only; supplier debts are shown separately.
+            if (r.partyType != PartyType.CUSTOMER) continue
             val day = Instant.ofEpochMilli(r.entry.date).atZone(zone).toLocalDate().toEpochDay()
             val acc = byDay.getOrPut(day) { LongArray(2) }
             if (r.entry.kind == EntryKind.GAVE) {
@@ -168,7 +170,7 @@ class Repository(private val helper: DepterDb) {
                 acc[1] += r.entry.amount
             }
         }
-        PeriodReport(gave, got, entries.size, byDay.map { (d, a) -> DayTotal(d, a[0], a[1]) })
+        PeriodReport(gave, got, entries.count { it.partyType == PartyType.CUSTOMER }, byDay.map { (d, a) -> DayTotal(d, a[0], a[1]) })
     }
 
     // ---------- Writes ----------

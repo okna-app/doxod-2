@@ -58,6 +58,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -89,6 +91,8 @@ fun PartyEditScreen(partyId: Long, initialType: Int, nav: NavController) {
     val repo = context.container.repo
     val scope = rememberCoroutineScope()
     val editing = partyId > 0
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
 
     var typeId by rememberSaveable { mutableIntStateOf(initialType) }
     var name by rememberSaveable { mutableStateOf("") }
@@ -146,6 +150,8 @@ fun PartyEditScreen(partyId: Long, initialType: Int, nav: NavController) {
             return
         }
         saving = true
+        focusManager.clearFocus()
+        keyboard?.hide()
         scope.launch(Dispatchers.Main.immediate) {
             if (editing) {
                 repo.updateParty(partyId, type, name, phone, note)

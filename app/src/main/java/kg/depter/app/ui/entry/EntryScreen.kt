@@ -69,6 +69,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -104,6 +105,7 @@ fun EntryScreen(partyId: Long, entryId: Long, initialKind: Int, onBack: () -> Un
     val scope = rememberCoroutineScope()
     val haptics = LocalHapticFeedback.current
     val focus = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
 
     val party by remember(partyId) { repo.party(partyId) }.collectAsStateWithLifecycle(initialValue = null)
     var kindId by rememberSaveable { mutableIntStateOf(initialKind) }
@@ -143,6 +145,8 @@ fun EntryScreen(partyId: Long, entryId: Long, initialKind: Int, onBack: () -> Un
             return
         }
         saving = true
+        focus.clearFocus()
+        keyboard?.hide()
         scope.launch(Dispatchers.Main.immediate) {
             if (entryId > 0) repo.updateEntry(entryId, partyId, kind, total, note, date)
             else repo.addEntry(partyId, kind, total, note, date)

@@ -356,7 +356,7 @@ private fun SearchRow(query: String, onQuery: (String) -> Unit, sort: PartySort,
             value = query,
             onValueChange = onQuery,
             modifier = Modifier.weight(1f).testTag("search"),
-            placeholder = { Text(stringResource(R.string.search_hint)) },
+            placeholder = { Text(stringResource(R.string.search_hint), maxLines = 1, overflow = TextOverflow.Ellipsis) },
             leadingIcon = { Icon(Icons.Filled.Search, null) },
             trailingIcon = {
                 if (query.isNotEmpty()) {

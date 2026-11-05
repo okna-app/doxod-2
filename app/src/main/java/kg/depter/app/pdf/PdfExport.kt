@@ -14,6 +14,7 @@ import kg.depter.app.data.AppSettings
 import kg.depter.app.data.EntryKind
 import kg.depter.app.data.LedgerLine
 import kg.depter.app.data.PartyRow
+import kg.depter.app.data.PartyType
 import kg.depter.app.data.ReportEntry
 import kg.depter.app.domain.Currencies
 import kg.depter.app.domain.Money
@@ -238,14 +239,15 @@ object PdfExport {
         w.canvas.drawText(context.getString(R.string.pdf_generated, dateFmt.format(LocalDate.now())), M, w.y, w.small)
         w.y += 16f
 
-        val gave = entries.filter { it.entry.kind == EntryKind.GAVE }.sumOf { it.entry.amount }
-        val got = entries.filter { it.entry.kind == EntryKind.GOT }.sumOf { it.entry.amount }
+        val customerEntries = entries.filter { it.partyType == PartyType.CUSTOMER }
+        val gave = customerEntries.filter { it.entry.kind == EntryKind.GAVE }.sumOf { it.entry.amount }
+        val got = customerEntries.filter { it.entry.kind == EntryKind.GOT }.sumOf { it.entry.amount }
         val receivable = parties.filter { it.balance > 0 }.sumOf { it.balance }
         val payable = -parties.filter { it.balance < 0 }.sumOf { it.balance }
         w.summaryBoxes(
             listOf(
-                Triple(context.getString(R.string.pdf_total_gave), m(gave), GAVE),
-                Triple(context.getString(R.string.pdf_total_got), m(got), GOT),
+                Triple(context.getString(R.string.report_gave), m(gave), GAVE),
+                Triple(context.getString(R.string.report_got), m(got), GOT),
             ),
         )
         w.summaryBoxes(

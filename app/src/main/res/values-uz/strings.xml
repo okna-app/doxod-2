@@ -163,8 +163,8 @@
     <string name="reminder_template_default">Standart matn</string>
     <string name="reminder_template_help">{name} — mijoz ismi, {amount} — qarz summasi, {shop} — doʻkoningiz</string>
     <string name="remove">Olib tashlash</string>
-    <string name="report_gave">Berildi</string>
-    <string name="report_got">Olindi</string>
+    <string name="report_gave">Nasiyaga berildi</string>
+    <string name="report_got">Qaytarildi</string>
     <string name="report_now">Bugungi holat</string>
     <string name="report_overdue">Muddati oʻtganlar</string>
     <string name="report_pdf">PDF hisobot</string>
