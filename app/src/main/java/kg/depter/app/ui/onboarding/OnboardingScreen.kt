@@ -29,8 +29,8 @@ import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Storefront
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -77,100 +77,124 @@ fun OnboardingScreen(onDone: () -> Unit) {
         Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState())
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .imePadding()
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .imePadding(),
     ) {
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            AppLanguage.tags.forEach { tag ->
-                FilterChip(
-                    selected = tag == lang,
-                    onClick = { AppLanguage.set(tag) },
-                    label = { Text(AppLanguage.nativeName(tag)) },
-                    modifier = Modifier.testTag("lang_$tag"),
-                )
-            }
-        }
-        Spacer(Modifier.height(20.dp))
-        Box(
+        Column(
             Modifier
-                .size(88.dp)
-                .background(Brush.linearGradient(listOf(c.heroStart, c.heroEnd)), RoundedCornerShape(26.dp)),
-            contentAlignment = Alignment.Center,
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .statusBarsPadding()
+                .padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
-            Image(painterResource(R.drawable.ic_launcher_foreground), contentDescription = null, modifier = Modifier.size(88.dp))
-        }
-        Spacer(Modifier.height(18.dp))
-        Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineLarge)
-        Text(
-            stringResource(R.string.onboarding_tagline),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(Modifier.height(20.dp))
-        Feature(Icons.Filled.Bolt, stringResource(R.string.feature_fast_title), stringResource(R.string.feature_fast_text))
-        Feature(Icons.Filled.NotificationsActive, stringResource(R.string.feature_remind_title), stringResource(R.string.feature_remind_text))
-        Feature(Icons.Filled.Lock, stringResource(R.string.feature_private_title), stringResource(R.string.feature_private_text))
-        Spacer(Modifier.height(16.dp))
-        Surface(shape = RoundedCornerShape(22.dp), color = MaterialTheme.colorScheme.surfaceContainerLowest) {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedTextField(
-                    value = shop,
-                    onValueChange = { if (it.length <= 50) shop = it },
-                    label = { Text(stringResource(R.string.field_shop)) },
-                    placeholder = { Text(stringResource(R.string.field_shop_hint)) },
-                    leadingIcon = { Icon(Icons.Filled.Storefront, null) },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done),
-                    modifier = Modifier.fillMaxWidth().testTag("onb_shop"),
-                    shape = RoundedCornerShape(14.dp),
-                )
-                Text(stringResource(R.string.field_country), style = MaterialTheme.typography.labelLarge)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Countries.all.forEach { item ->
-                        FilterChip(
-                            selected = item.iso == country,
-                            onClick = { country = item.iso },
-                            label = { Text(item.flag + " " + countryName(item.iso)) },
-                        )
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                AppLanguage.tags.forEach { tag ->
+                    FilterChip(
+                        selected = tag == lang,
+                        onClick = { AppLanguage.set(tag) },
+                        label = { Text(AppLanguage.nativeName(tag)) },
+                        modifier = Modifier.testTag("lang_$tag"),
+                    )
+                }
+            }
+            Spacer(Modifier.height(20.dp))
+            Box(
+                Modifier
+                    .size(88.dp)
+                    .background(Brush.linearGradient(listOf(c.heroStart, c.heroEnd)), RoundedCornerShape(26.dp)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Image(painterResource(R.drawable.ic_launcher_foreground), contentDescription = null, modifier = Modifier.size(88.dp))
+            }
+            Spacer(Modifier.height(18.dp))
+            Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineLarge)
+            Text(
+                stringResource(R.string.onboarding_tagline),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Spacer(Modifier.height(20.dp))
+            Feature(Icons.Filled.Bolt, stringResource(R.string.feature_fast_title), stringResource(R.string.feature_fast_text))
+            Feature(
+                Icons.Filled.NotificationsActive,
+                stringResource(R.string.feature_remind_title),
+                stringResource(R.string.feature_remind_text),
+            )
+            Feature(Icons.Filled.Lock, stringResource(R.string.feature_private_title), stringResource(R.string.feature_private_text))
+            Spacer(Modifier.height(16.dp))
+            Surface(shape = RoundedCornerShape(22.dp), color = MaterialTheme.colorScheme.surfaceContainerLowest) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(
+                        value = shop,
+                        onValueChange = { if (it.length <= 50) shop = it },
+                        label = { Text(stringResource(R.string.field_shop)) },
+                        placeholder = { Text(stringResource(R.string.field_shop_hint)) },
+                        leadingIcon = { Icon(Icons.Filled.Storefront, null) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done),
+                        modifier = Modifier.fillMaxWidth().testTag("onb_shop"),
+                        shape = RoundedCornerShape(14.dp),
+                    )
+                    Text(stringResource(R.string.field_country), style = MaterialTheme.typography.labelLarge)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Countries.all.forEach { item ->
+                            FilterChip(
+                                selected = item.iso == country,
+                                onClick = { country = item.iso },
+                                label = { Text(item.flag + " " + countryName(item.iso)) },
+                            )
+                        }
                     }
                 }
             }
+            Spacer(Modifier.height(8.dp))
         }
-        Spacer(Modifier.height(20.dp))
-        Button(
-            onClick = {
-                val ctry = Countries.byIso(country)
-                store.update {
-                    it.copy(
-                        onboarded = true,
-                        businessName = shop.trim(),
-                        country = ctry.iso,
-                        currency = ctry.currency,
-                    )
+        Surface(color = MaterialTheme.colorScheme.background, shadowElevation = 6.dp) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+            ) {
+                Button(
+                    onClick = {
+                        val ctry = Countries.byIso(country)
+                        store.update {
+                            it.copy(
+                                onboarded = true,
+                                businessName = shop.trim(),
+                                country = ctry.iso,
+                                currency = ctry.currency,
+                            )
+                        }
+                        onDone()
+                    },
+                    modifier = Modifier.fillMaxWidth().height(56.dp).testTag("onb_start"),
+                    shape = RoundedCornerShape(16.dp),
+                ) {
+                    Text(stringResource(R.string.start), style = MaterialTheme.typography.titleMedium)
                 }
-                onDone()
-            },
-            modifier = Modifier.fillMaxWidth().height(56.dp).testTag("onb_start"),
-            shape = RoundedCornerShape(16.dp),
-        ) {
-            Text(stringResource(R.string.start), style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    pluralStringResource(
+                        R.plurals.onboarding_trial,
+                        kg.depter.app.domain.ProStatus.TRIAL_DAYS,
+                        kg.depter.app.domain.ProStatus.TRIAL_DAYS,
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
-        Spacer(Modifier.height(8.dp))
-        Text(
-            pluralStringResource(R.plurals.onboarding_trial, kg.depter.app.domain.ProStatus.TRIAL_DAYS, kg.depter.app.domain.ProStatus.TRIAL_DAYS),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Spacer(Modifier.height(12.dp))
     }
 }
 
 @Composable
-private fun Feature(icon: ImageVector, title: String, text: String) {
+private fun Feature(
+    icon: ImageVector,
+    title: String,
+    text: String,
+) {
     Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top) {
         Box(
             Modifier

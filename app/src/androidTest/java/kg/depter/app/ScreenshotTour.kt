@@ -3,13 +3,15 @@ package kg.depter.app
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.pdf.PdfRenderer
+import android.app.LocaleManager
+import android.os.LocaleList
 import android.os.ParcelFileDescriptor
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
-import androidx.core.os.LocaleListCompat
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -131,11 +133,11 @@ class ScreenshotTour {
         top
     }
 
+    /** AppCompat needs a live activity to switch language, so the test talks to LocaleManager (API 33+) directly. */
     private fun setLocale(lang: String) {
-        instrumentation.runOnMainSync {
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(lang))
-        }
-        Thread.sleep(500)
+        val lm = instrumentation.targetContext.getSystemService(LocaleManager::class.java)
+        lm.applicationLocales = LocaleList.forLanguageTags(lang)
+        Thread.sleep(1000)
     }
 
     private fun setTheme(t: Int) {
@@ -175,7 +177,7 @@ class ScreenshotTour {
         val scenario = ActivityScenario.launch(MainActivity::class.java)
         compose.onNodeWithTag("onb_start").assertExists()
         shot("${lang}_01_onboarding")
-        compose.onNodeWithTag("onb_shop").performTextInput(d.shop)
+        compose.onNodeWithTag("onb_shop").performScrollTo().performTextInput(d.shop)
         compose.onNodeWithTag("onb_start").performClick()
         compose.onNodeWithTag("home_list").assertExists()
         shot("${lang}_02_home")
