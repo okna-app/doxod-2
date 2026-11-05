@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Notebook -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M40,30h28a7,7 0 0 1 7,7v34a7,7 0 0 1 -7,7h-28a7,7 0 0 1 -7,-7v-34a7,7 0 0 1 7,-7z" />
+    <!-- Binding rings -->
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M29,41h7M29,51h7M29,61h7" />
+    <path
+        android:strokeColor="#FF3346D3"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M33,41h3M33,51h3M33,61h3" />
+    <!-- Lines -->
+    <path
+        android:strokeColor="#FF3346D3"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:pathData="M43,42h22M43,50h22M43,58h12" />
+    <!-- Paid coin -->
+    <path
+        android:fillColor="#FF3346D3"
+        android:pathData="M54.5,68a13.5,13.5 0 1 0 27,0a13.5,13.5 0 1 0 -27,0z" />
+    <path
+        android:fillColor="#FF19C37D"
+        android:pathData="M57,68a11,11 0 1 0 22,0a11,11 0 1 0 -22,0z" />
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M62.5,68.5l4,4l7,-8" />
+</vector>
