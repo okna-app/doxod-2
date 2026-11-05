@@ -260,7 +260,7 @@ fun LedgerScreen(partyId: Long, nav: NavController) {
                         if (!pro.isPro) {
                             proDialog = true
                         } else {
-                            scope.launch {
+                            scope.launch(Dispatchers.Main.immediate) {
                                 val ledger = repo.ledgerNow(partyId)
                                 val file = withContext(Dispatchers.IO) { PdfExport.statement(context, settings, r, ledger) }
                                 Intents.shareFile(context, file, "application/pdf")
@@ -303,7 +303,7 @@ fun LedgerScreen(partyId: Long, nav: NavController) {
             confirmButton = {
                 TextButton(onClick = {
                     confirmDelete = false
-                    scope.launch {
+                    scope.launch(Dispatchers.Main.immediate) {
                         Reminders.schedule(context, r.party.id, null)
                         repo.deleteParty(r.party.id)
                     }
@@ -325,7 +325,7 @@ fun LedgerScreen(partyId: Long, nav: NavController) {
                     pickDue = false
                     val ms = state.selectedDateMillis ?: return@TextButton
                     val day = Instant.ofEpochMilli(ms).atZone(ZoneOffset.UTC).toLocalDate().toEpochDay()
-                    scope.launch {
+                    scope.launch(Dispatchers.Main.immediate) {
                         repo.setDueDay(r.party.id, day)
                         Reminders.schedule(context, r.party.id, day)
                     }
@@ -340,7 +340,7 @@ fun LedgerScreen(partyId: Long, nav: NavController) {
                     if (r.party.dueDay != null) {
                         TextButton(onClick = {
                             pickDue = false
-                            scope.launch {
+                            scope.launch(Dispatchers.Main.immediate) {
                                 repo.setDueDay(r.party.id, null)
                                 Reminders.schedule(context, r.party.id, null)
                             }

@@ -72,6 +72,7 @@ import kg.depter.app.data.PartyType
 import kg.depter.app.domain.Money
 import kg.depter.app.ui.Routes
 import kg.depter.app.ui.theme.Depter
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private class PickPhoneContact : ActivityResultContract<Unit, Uri?>() {
@@ -145,7 +146,7 @@ fun PartyEditScreen(partyId: Long, initialType: Int, nav: NavController) {
             return
         }
         saving = true
-        scope.launch {
+        scope.launch(Dispatchers.Main.immediate) {
             if (editing) {
                 repo.updateParty(partyId, type, name, phone, note)
                 nav.popBackStack()

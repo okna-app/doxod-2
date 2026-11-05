@@ -90,6 +90,7 @@ import kg.depter.app.ui.dayTitle
 import kg.depter.app.ui.rememberMoney
 import kg.depter.app.ui.theme.Depter
 import kg.depter.app.ui.theme.NumberStyle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
@@ -142,7 +143,7 @@ fun EntryScreen(partyId: Long, entryId: Long, initialKind: Int, onBack: () -> Un
             return
         }
         saving = true
-        scope.launch {
+        scope.launch(Dispatchers.Main.immediate) {
             if (entryId > 0) repo.updateEntry(entryId, partyId, kind, total, note, date)
             else repo.addEntry(partyId, kind, total, note, date)
             onBack()
@@ -321,7 +322,7 @@ fun EntryScreen(partyId: Long, entryId: Long, initialKind: Int, onBack: () -> Un
             confirmButton = {
                 TextButton(onClick = {
                     confirmDelete = false
-                    scope.launch {
+                    scope.launch(Dispatchers.Main.immediate) {
                         repo.deleteEntry(entryId)
                         onBack()
                     }

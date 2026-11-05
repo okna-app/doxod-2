@@ -159,7 +159,7 @@ fun ReportsTab(padding: PaddingValues, nav: NavController) {
 
     val csvLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
         if (uri == null) return@rememberLauncherForActivityResult
-        scope.launch {
+        scope.launch(Dispatchers.Main.immediate) {
             val ok = withContext(Dispatchers.IO) {
                 runCatching {
                     val text = PdfExport.csv(context, settings, repo.reportEntries(range.first, range.second))
@@ -243,7 +243,7 @@ fun ReportsTab(padding: PaddingValues, nav: NavController) {
                         if (!pro.isPro) {
                             proDialog = true
                         } else {
-                            scope.launch {
+                            scope.launch(Dispatchers.Main.immediate) {
                                 val entries = repo.reportEntries(range.first, range.second)
                                 val file = withContext(Dispatchers.IO) { PdfExport.report(context, settings, periodName, entries, all) }
                                 Intents.shareFile(context, file, "application/pdf")

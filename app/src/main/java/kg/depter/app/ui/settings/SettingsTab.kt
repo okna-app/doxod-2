@@ -120,7 +120,7 @@ fun SettingsTab(padding: PaddingValues, nav: NavController) {
 
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri: Uri? ->
         if (uri == null) return@rememberLauncherForActivityResult
-        scope.launch {
+        scope.launch(Dispatchers.Main.immediate) {
             val ok = runCatching {
                 val json = c.repo.exportJson().put("businessName", s.businessName).toString()
                 withContext(Dispatchers.IO) {
@@ -133,7 +133,7 @@ fun SettingsTab(padding: PaddingValues, nav: NavController) {
     }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         if (uri == null) return@rememberLauncherForActivityResult
-        scope.launch {
+        scope.launch(Dispatchers.Main.immediate) {
             val json = withContext(Dispatchers.IO) {
                 runCatching {
                     val text = context.contentResolver.openInputStream(uri)?.use { it.readBytes().toString(Charsets.UTF_8) }
@@ -290,7 +290,7 @@ fun SettingsTab(padding: PaddingValues, nav: NavController) {
                     val json = pendingImport
                     dialog = Dialog.NONE
                     if (json != null) {
-                        scope.launch {
+                        scope.launch(Dispatchers.Main.immediate) {
                             val result = runCatching { c.repo.importJson(json) }
                             if (result.isSuccess) {
                                 val name = json.optString("businessName")
