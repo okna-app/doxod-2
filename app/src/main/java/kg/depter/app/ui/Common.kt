@@ -129,11 +129,11 @@ private val AvatarPalette = listOf(
 )
 
 fun initials(name: String): String {
-    val parts = name.trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
+    val words = name.trim().split(Regex("\\s+")).filter { w -> w.any { it.isLetterOrDigit() } }
     return when {
-        parts.isEmpty() -> "?"
-        parts.size == 1 -> parts[0].take(2).uppercase()
-        else -> (parts[0].take(1) + parts[1].take(1)).uppercase()
+        words.isEmpty() -> "?"
+        words.size == 1 -> words[0].filter { it.isLetterOrDigit() }.take(2).uppercase()
+        else -> words.take(2).joinToString("") { w -> w.first { it.isLetterOrDigit() }.toString() }.uppercase()
     }
 }
 

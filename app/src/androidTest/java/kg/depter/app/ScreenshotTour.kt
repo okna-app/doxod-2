@@ -3,11 +3,13 @@ package kg.depter.app
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.pdf.PdfRenderer
-import android.app.LocaleManager
-import android.os.LocaleList
+import android.content.res.Configuration
+import java.util.Locale
 import android.os.ParcelFileDescriptor
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -133,11 +135,20 @@ class ScreenshotTour {
         top
     }
 
-    /** AppCompat needs a live activity to switch language, so the test talks to LocaleManager (API 33+) directly. */
-    private fun setLocale(lang: String) {
-        val lm = instrumentation.targetContext.getSystemService(LocaleManager::class.java)
-        lm.applicationLocales = LocaleList.forLanguageTags(lang)
-        Thread.sleep(1000)
+    /** Text as the app shows it in [lang], used to confirm the language really switched. */
+    private fun str(lang: String, id: Int): String {
+        val cfg = Configuration(instrumentation.targetContext.resources.configuration)
+        cfg.setLocale(Locale.forLanguageTag(lang))
+        return instrumentation.targetContext.createConfigurationContext(cfg).getString(id)
+    }
+
+    /** Database work runs on background threads that Compose does not track, so wait explicitly. */
+    private fun waitTag(tag: String, timeout: Long = 8_000) {
+        compose.waitUntil(timeout) { compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty() }
+    }
+
+    private fun waitText(text: String, timeout: Long = 8_000) {
+        compose.waitUntil(timeout) { compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty() }
     }
 
     private fun setTheme(t: Int) {
@@ -170,27 +181,29 @@ class ScreenshotTour {
     private fun tourFor(lang: String) {
         val d = demos.getValue(lang)
         setTheme(1)
-        setLocale(lang)
         val top = seed(d)
         app.container.settings.update { it.copy(onboarded = false, businessName = "", pinHash = "", pinSalt = "", licenseCode = "") }
 
         val scenario = ActivityScenario.launch(MainActivity::class.java)
-        compose.onNodeWithTag("onb_start").assertExists()
+        waitTag("onb_start")
+        compose.onNodeWithTag("lang_$lang").performClick()
+        waitText(str(lang, R.string.start))
+        waitTag("onb_start")
         shot("${lang}_01_onboarding")
         compose.onNodeWithTag("onb_shop").performScrollTo().performTextInput(d.shop)
         compose.onNodeWithTag("onb_start").performClick()
-        compose.onNodeWithTag("home_list").assertExists()
+        waitTag("home_list")
         shot("${lang}_02_home")
 
         compose.onNodeWithTag("party_$top").performClick()
-        compose.onNodeWithTag("ledger_balance").assertExists()
+        waitTag("ledger_balance")
         shot("${lang}_03_ledger")
 
         compose.onNodeWithTag("btn_gave").performClick()
         "350+1200".forEach { k -> compose.onNodeWithTag("key_$k").performClick() }
         shot("${lang}_04_entry")
         compose.onNodeWithTag("entry_save").performClick()
-        compose.onNodeWithTag("ledger_balance").assertExists()
+        waitTag("ledger_balance")
 
         // PDF statement rendered to an image so the layout can be reviewed.
         runBlocking {
@@ -208,15 +221,15 @@ class ScreenshotTour {
         compose.onNodeWithTag("seg_customers").performClick()
 
         compose.onNodeWithTag("tab_reports").performClick()
-        compose.onNodeWithTag("reports_list").assertExists()
+        waitTag("reports_list")
         shot("${lang}_06_reports")
 
         compose.onNodeWithTag("tab_settings").performClick()
-        compose.onNodeWithTag("settings_list").assertExists()
+        waitTag("settings_list")
         shot("${lang}_07_settings")
 
         compose.onNodeWithTag("pro_card").performClick()
-        compose.onNodeWithTag("device_id").assertExists()
+        waitTag("device_id")
         shot("${lang}_08_pro")
         Espresso.pressBack()
         compose.onNodeWithTag("tab_book").performClick()
@@ -224,7 +237,7 @@ class ScreenshotTour {
         if (lang == "ky") {
             setTheme(2)
             scenario.recreate()
-            compose.onNodeWithTag("home_list").assertExists()
+            waitTag("home_list")
             shot("${lang}_10_home_dark")
             setTheme(1)
         }
@@ -232,19 +245,18 @@ class ScreenshotTour {
     }
 
     private fun lockScreen() {
-        setLocale("ky")
         app.container.settings.setPin("1234")
         app.container.settings.update { it.copy(onboarded = true) }
         app.container.lock.lockNow()
         val scenario = ActivityScenario.launch(MainActivity::class.java)
-        compose.onNodeWithTag("lock_screen").assertExists()
+        waitTag("lock_screen")
         compose.onNodeWithTag("pin_1").performClick()
         compose.onNodeWithTag("pin_9").performClick()
-        shot("ky_11_lock")
+        shot("lock_11")
         compose.onNodeWithTag("pin_back").performClick()
         compose.onNodeWithTag("pin_back").performClick()
         "1234".forEach { compose.onNodeWithTag("pin_$it").performClick() }
-        compose.onNodeWithTag("home_list").assertExists()
+        waitTag("home_list")
         app.container.settings.setPin(null)
         scenario.close()
     }
