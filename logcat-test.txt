@@ -1,0 +1,5 @@
+--------- beginning of main
+11-05 10:13:05.451 I/TestRunner( 3648): run started: 1 tests
+11-05 10:13:05.454 I/TestRunner( 3648): started: tour(kg.depter.app.ScreenshotTour)
+11-05 10:14:25.347 I/TestRunner( 3648): finished: tour(kg.depter.app.ScreenshotTour)
+11-05 10:14:25.364 I/TestRunner( 3648): run finished: 1 tests, 0 failed, 0 ignored
